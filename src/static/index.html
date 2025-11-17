@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Bank Economic Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <span class="title-icon">📊</span>
+                    World Bank Economic Dashboard
+                </h1>
+                <p class="subtitle">主要12カ国の経済指標分析 - AI powered by Gemini</p>
+                <div class="last-updated">
+                    最終更新: <span id="lastUpdated">2025/6/15 13:19:14</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 概要セクション -->
+        <section class="overview-section">
+            <div class="overview-card">
+                <h2>📈 概要</h2>
+                <div class="overview-content">
+                    <p class="overview-text" id="overviewText">
+                        2006年から2024年までの世界の主要経済国（日本、アメリカ、中国など12ヶ国）の経済状況を包括的に分析したデータセットです。GDP、インフレ率、失業率、人口などの指標を比較検討し、各国の経済動向を把握します。
+                    </p>
+                    <div class="key-findings">
+                        <h3>主要な発見</h3>
+                        <ul id="keyFindings">
+                            <li>GDP成長率は国によって大きく異なり、新興国（インド、インドネシア、ブラジルなど）が先進国（日本、アメリカ、ドイツなど）を上回る傾向が見られる。</li><li>インフレ率は世界的な変動を受けやすく、特に2020年以降のパンデミックおよびその後の経済回復期において顕著な上昇が見られた。</li><li>一人当たりGDPは国の経済発展段階を示す重要な指標であり、国ごとの生活水準の格差が明確に示されている。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 国別分析セクション -->
+        <section class="countries-section">
+            <h2>🌍 国別分析</h2>
+            <div class="countries-grid" id="countriesGrid">
+                <!-- 国別カードはJavaScriptで動的生成 -->
+            </div>
+        </section>
+
+        <!-- 指標比較セクション -->
+        <section class="indicators-section">
+            <h2>📊 指標別比較</h2>
+            <div class="indicators-tabs">
+                <div class="tab-buttons" id="indicatorTabs">
+                    <!-- タブボタンはJavaScriptで動的生成 -->
+                </div>
+                <div class="tab-content" id="indicatorContent">
+                    <!-- タブコンテンツはJavaScriptで動的生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- チャートセクション -->
+        <section class="charts-section">
+            <h2>📈 データ可視化</h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>GDP比較（最新年）</h3>
+                    <canvas id="gdpChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>GDP成長率トレンド</h3>
+                    <canvas id="gdpGrowthChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>失業率比較</h3>
+                    <canvas id="unemploymentChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>一人当たりGDP比較</h3>
+                    <canvas id="gdpPerCapitaChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>インフレ率トレンド</h3>
+                    <canvas id="inflationChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>貿易トレンド</h3>
+                    <canvas id="tradeChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>総人口トレンド</h3>
+                    <canvas id="populationChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>外国直接投資トレンド</h3>
+                    <canvas id="fdiChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- データテーブルセクション -->
+        <section class="data-section">
+            <h2>📋 詳細データ</h2>
+            <div class="data-controls">
+                <select id="countrySelect">
+                    <option value="">国を選択</option>
+                    <option value="JPN">日本</option><option value="USA">アメリカ</option><option value="CHN">中国</option><option value="DEU">ドイツ</option><option value="GBR">イギリス</option><option value="FRA">フランス</option><option value="IND">インド</option><option value="BRA">ブラジル</option><option value="CAN">カナダ</option><option value="AUS">オーストラリア</option><option value="IDN">インドネシア</option><option value="PER">ペルー</option>
+                </select>
+                <select id="indicatorSelect">
+                    <option value="">指標を選択</option>
+                    <option value="NY.GDP.MKTP.CD">GDP（現在価格、米ドル）</option><option value="NY.GDP.MKTP.KD.ZG">GDP成長率（年率）</option><option value="SL.UEM.TOTL.ZS">失業率（%）</option><option value="FP.CPI.TOTL.ZG">インフレ率（%）</option><option value="NY.GDP.PCAP.CD">一人当たりGDP（米ドル）</option><option value="NE.TRD.GNFS.ZS">貿易（GDP比%）</option><option value="GC.DPT.TOTL.GD.ZS">政府債務（GDP比%）</option><option value="SP.POP.TOTL">総人口</option><option value="SP.POP.GROW">人口増減率（年率%）</option><option value="BX.KLT.DINV.CD.WD">外国直接投資（米ドル）</option>
+                </select>
+            </div>
+            <div class="data-table-container">
+                <table id="dataTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>年</th>
+                            <th>国</th>
+                            <th>指標</th>
+                            <th>値</th>
+                            <th>単位</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                        <!-- データはJavaScriptで動的生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>
+                    データソース: <a href="https://data.worldbank.org/" target="_blank">World Bank Open Data</a> | 
+                    AI分析: <a href="https://ai.google.dev/" target="_blank">Google Gemini</a> | 
+                    更新: GitHub Actions
+                </p>
+                <p class="footer-note">
+                    このダッシュボードは自動更新されます。最新のデータと分析をお楽しみください。
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
